@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[72107,["/_next/static/chunks/c937e4f4cca866b9.js","/_next/static/chunks/1c2536dcd6448514.js"],"default"]
+3:I[97367,["/_next/static/chunks/ff1a16fafef87110.js","/_next/static/chunks/247eb132b7f7b574.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"Va2RMPen-DCmdgPakBS97","rsc":["$","$1","c",{"children":[["$","main",null,{"className":"w-full h-full p-6 flex flex-col items-center","children":["$","div",null,{"className":"w-full max-w-[1400px] h-full px-8 sm:px-12 lg:px-24","children":["$","$L2",null,{}]}]}],[["$","script","script-0",{"src":"/_next/static/chunks/1c2536dcd6448514.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null
