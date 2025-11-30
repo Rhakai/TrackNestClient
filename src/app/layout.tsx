@@ -1,10 +1,17 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-import "primereact/resources/primereact.min.css"; 
+// 2. PrimeReact Core & Theme (CRITICAL)
+import "primereact/resources/themes/lara-light-indigo/theme.css"; 
+import "primereact/resources/primereact.min.css";                                 
 import "primeicons/primeicons.css";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
+
+// 3. AG Grid Styles (CRITICAL)
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css'; // or ag-theme-quartz
+
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+
 import Navbar from "@/components/Navbar";
 
 const geistSans = Geist({
