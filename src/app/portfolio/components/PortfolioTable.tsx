@@ -29,17 +29,17 @@ const currencyFormatter = (params: { value: number }) => {
 };
 
 
-interface PositionsTableProps {
+interface PortfolioTableProps {
     positions: Position[];
 }
 
-export default function PositionsTable({ positions }: PositionsTableProps) {
+export default function PortfolioTable({ positions }: PortfolioTableProps) {
 
     // Definições de Coluna Melhoradas
     const [colDefs] = useState<ColDef<Position>[]>([
         { 
             field: "assetTicket", 
-            headerName: "Ativo", // Nome em Português
+            headerName: "Ativo",
             filter: true,
             flex: 1 
         },
@@ -51,9 +51,10 @@ export default function PositionsTable({ positions }: PositionsTableProps) {
         { 
             field: "cost", 
             headerName: "Custo Unit.",
-            valueFormatter: currencyFormatter, // Usando o novo formatador
+            valueFormatter: currencyFormatter,
             flex: 1
         },
+        // Exemplo de coluna calculada (Total)
         {
             headerName: "Total Investido",
             valueGetter: (p) => (p.data ? p.data.amountOfAssets * p.data.cost : 0),

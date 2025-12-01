@@ -6,7 +6,7 @@ import "primereact/resources/primereact.min.css";
 import "primeicons/primeicons.css";
 
 // 3. AG Grid Styles (CRITICAL)
-import 'ag-grid-community/styles/ag-grid.css';
+// import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css'; // or ag-theme-quartz
 
 import type { Metadata } from "next";
