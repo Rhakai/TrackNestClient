@@ -35,19 +35,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      {/* 1. 'h-screen' e 'overflow-hidden': Mantemos isto aqui para garantir
-            que a página inteira não rola, mantendo a Navbar fixa.
-      */}
-      <body className="h-screen flex flex-col overflow-hidden">
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className="h-screen flex flex-col overflow-hidden font-sans">
         
         <Navbar />
 
-        {/* 2. ALTERAÇÃO AQUI:
-           Mudamos de 'overflow-hidden' para 'overflow-auto'.
-           Isto diz: "Se o conteúdo (children) for maior que o espaço disponível,
-           cria uma barra de scroll APENAS nesta área, por baixo da Navbar."
-        */}
         <div className="flex-1 w-full overflow-auto bg-gray-50">
             {children}
         </div>
