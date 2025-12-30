@@ -1,8 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  reactCompiler: true,
+  output: "export",
+  basePath: "/TrackNestClient",
+  images: {
+    unoptimized: true,
+  },
+  experimental: {
+    // @ts-expect-error
+    reactCompiler: true,
+  },
 };
 
 export default nextConfig;
