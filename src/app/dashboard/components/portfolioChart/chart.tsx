@@ -1,26 +1,27 @@
-"use client";
+'use client';
 
+import { ChartTimeFrame } from '@/lib/trackNestTypes';
 import {
   Area,
   AreaChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
-} from "recharts";
+} from 'recharts';
 
 // Mock data reflecting the labels in your image (Jun 24 - Jun 30)
 const data = [
-  { date: "Jun 24", value: 4000 },
-  { date: "Jun 25", value: 3000 },
-  { date: "Jun 26", value: 5000 },
-  { date: "Jun 27", value: 4500 },
-  { date: "Jun 28", value: 6000 },
-  { date: "Jun 29", value: 5500 },
-  { date: "Jun 30", value: 7000 },
+  { date: 'Jun 24', value: 4000 },
+  { date: 'Jun 25', value: 3000 },
+  { date: 'Jun 26', value: 5000 },
+  { date: 'Jun 27', value: 4500 },
+  { date: 'Jun 28', value: 6000 },
+  { date: 'Jun 29', value: 5500 },
+  { date: 'Jun 30', value: 7000 },
 ];
 
 interface ChartProps {
-  range: string;
+  range: ChartTimeFrame;
 }
 
 export function Chart({ range }: ChartProps) {

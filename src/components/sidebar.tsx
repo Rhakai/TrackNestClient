@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from 'next/link';
 import { 
   LayoutDashboard, 
   CircleDot, 
@@ -9,20 +9,20 @@ import {
   FileText, 
   Settings, 
   HelpCircle 
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const navItems = [
-  { label: "Dashboard", icon: LayoutDashboard, href: "/dashboard" },
-  { label: "Lifecycle", icon: CircleDot, href: "#" },
-  { label: "Analytics", icon: BarChart3, href: "#" },
-  { label: "Projects", icon: Folder, href: "#" },
-  { label: "Team", icon: Users, href: "#" },
+  { label: 'Dashboard', icon: LayoutDashboard, href: '/dashboard' },
+  { label: 'Lifecycle', icon: CircleDot, href: '#' },
+  { label: 'Analytics', icon: BarChart3, href: '#' },
+  { label: 'Projects', icon: Folder, href: '#' },
+  { label: 'Team', icon: Users, href: '#' },
 ];
 
 const docItems = [
-  { label: "Data Library", icon: Database, href: "#" },
-  { label: "Reports", icon: FileText, href: "#" },
+  { label: 'Data Library', icon: Database, href: '#' },
+  { label: 'Reports', icon: FileText, href: '#' },
 ];
 
 export function Sidebar() {
