@@ -1,20 +1,22 @@
 'use client'
 
-import { Chart } from "./chart";
-import { Card, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useState } from "react";
+import { Chart } from './chart';
+import { Card, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ChartTimeFrame } from '@/lib/trackNestTypes';
+import { useState } from 'react';
 
 export default function PortfolioChartComponent() {
 
-    const [timeRange, setTimeRange] = useState("week");
-    const subtitleMap: Record<string, string> = {
-        "day": "Evolution for Today",
-        "week": "Evolution for this Week",
-        "month": "Evolution for this Month",
-        "ytd": "Evolution for this Year",
-        "1y": "Evolution for One Year",
-        "max": "Evolution Since Beginning",
+    const [timeRange, setTimeRange] = useState<ChartTimeFrame>(ChartTimeFrame.week);
+
+    const subtitleMap: Record<ChartTimeFrame, string> = {
+        [ChartTimeFrame.day]: 'Evolution for Today',
+        [ChartTimeFrame.week]: 'Evolution for this Week',
+        [ChartTimeFrame.month]: 'Evolution for this Month',
+        [ChartTimeFrame.ytd]: 'Evolution for this Year',
+        [ChartTimeFrame.year]: 'Evolution for One Year',
+        [ChartTimeFrame.max]: 'Evolution Since Beginning',
     };
 
     return (
@@ -28,14 +30,17 @@ export default function PortfolioChartComponent() {
                         {subtitleMap[timeRange]}
                     </p>
                 </div>
-                <Tabs defaultValue="week" onValueChange={(value) => setTimeRange(value)}>
+                <Tabs 
+                    defaultValue={ChartTimeFrame.week} 
+                    onValueChange={(value) => setTimeRange(value as ChartTimeFrame)}
+                >
                     <TabsList className="bg-muted">
-                        <TabsTrigger value="day">Day</TabsTrigger>
-                        <TabsTrigger value="week">Week</TabsTrigger>
-                        <TabsTrigger value="month">Month</TabsTrigger>
-                        <TabsTrigger value="ytd">YTD</TabsTrigger>
-                        <TabsTrigger value="1y">1Y</TabsTrigger>
-                        <TabsTrigger value="max">Max</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.day}>Day</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.week}>Week</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.month}>Month</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.ytd}>YTD</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.year}>1Y</TabsTrigger>
+                        <TabsTrigger value={ChartTimeFrame.max}>Max</TabsTrigger>
                     </TabsList>
                 </Tabs>
             </div>
