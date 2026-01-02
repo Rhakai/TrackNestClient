@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DollarSign, TrendingUp, Activity, PieChart } from "lucide-react";
-import PortfolioChartComponent from "./portfilio-chart.component";
-import { DataTable } from "./data-table";
-import { columns, Position } from "./columns";
+import PortfolioChartComponent from "./components/portfolioChart/portfilio-chart";
+import { DataTable } from "./components/positionTable/data-table";
+import { columns, Position } from "./components/positionTable/columns";
 
 // Mock Data for the Portfolio
 const stats = [

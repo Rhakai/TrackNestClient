@@ -1,6 +1,6 @@
 'use client'
 
-import { PortfolioChart } from "@/components/portfolio-chart";
+import { Chart } from "./chart";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
@@ -39,7 +39,7 @@ export default function PortfolioChartComponent() {
                     </TabsList>
                 </Tabs>
             </div>
-            <PortfolioChart range={timeRange} />
+            <Chart range={timeRange} />
         </Card>
     )
 }

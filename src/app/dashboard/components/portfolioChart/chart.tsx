@@ -19,11 +19,11 @@ const data = [
   { date: "Jun 30", value: 7000 },
 ];
 
-interface PortfolioChartProps {
+interface ChartProps {
   range: string;
 }
 
-export function PortfolioChart({ range }: PortfolioChartProps) {
+export function Chart({ range }: ChartProps) {
   return (
     <div className="h-[350px] w-full">
       <ResponsiveContainer width="100%" height="100%">

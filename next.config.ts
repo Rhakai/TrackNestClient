@@ -6,10 +6,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    // @ts-expect-error
-    reactCompiler: true,
-  },
+  reactCompiler: true,
 };
 
 export default nextConfig;
