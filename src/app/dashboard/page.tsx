@@ -3,6 +3,8 @@ import { DollarSign, TrendingUp, Activity, PieChart } from 'lucide-react';
 import PortfolioChartComponent from './components/portfolioChart/portfilio-chart';
 import { DataTable } from './components/positionTable/data-table';
 import { columns, Position } from './components/positionTable/columns';
+import { getDashboardSummary, getPortfolioHistory, getPositions } from '@/services/TrackNestApi';
+import { ChartTimeFrame } from '@/lib/trackNestTypes';
 
 const stats = [
     { title: 'Portfolio Value', value: '$45,230.50', change: '+12.5%', icon: <DollarSign className="w-4 h-4" />, trend: 'up' },
@@ -17,7 +19,13 @@ const positions: Position[] = [
     { ticker: 'BTC', shares: 0.5, avgPrice: '$32,000', currentPrice: '$64,200', gain: '+100.6%', status: 'Profit' },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+
+    // const [trackNestPositions, dashboardSummay] = await Promise.all([
+    //     getPositions(),
+    //     getDashboardSummary()
+    // ]);
+
     return (
         <div className="p-8 bg-background text-foreground min-h-screen space-y-8">
             <h1 className="text-3xl font-bold tracking-tight text-foreground">

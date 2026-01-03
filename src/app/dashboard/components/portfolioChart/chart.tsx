@@ -1,6 +1,6 @@
 'use client';
 
-import { ChartTimeFrame } from '@/lib/trackNestTypes';
+import { ChartTimeFrame, PortfolioHistory } from '@/lib/trackNestTypes';
 import {
   Area,
   AreaChart,
@@ -22,9 +22,13 @@ const data = [
 
 interface ChartProps {
   range: ChartTimeFrame;
+  portfolioHistory: PortfolioHistory;
 }
 
-export function Chart({ range }: ChartProps) {
+export function Chart({ range, portfolioHistory }: ChartProps) {
+
+  
+
   return (
     <div className="h-[350px] w-full">
       <ResponsiveContainer width="100%" height="100%">

@@ -1,48 +1,36 @@
-export type Position = {
-    ticker: string;
-    shares: number;
-    avgPrice: string;
-    currentPrice: string;
-    gain: string;
-    status: 'Profit' | 'Loss';
-};
-
-export type ChartDataPoint = {
-    date: string;
-    value: number;
-};
-
-export type DashboardSummary = {
-    totalValue: string;    // e.g., '$125,000'
-    totalGain: string;     // e.g., '+$12,500'
-    gainPercentage: string;// e.g., '+10.5%'
-};
-
-// True types
-
 export type PortfolioDetails = {
     totalValue: number;
     totalInvested: number;
-    nominalGainLoss: number;
-    percentageGainLoss: number;
+    totalGain: number;
+    totalGainPercentage: number;
 }
 
-export type PositionV2 = {
-    accountName: string;
-    assetType: string;
-    assetCategory: string;
+export type Position = {
+    accountName: string; // to be used in the pie chart
+    assetType: string; // to be used in the pie chart
+    assetCategory: string; // to be used in the pie chart
     assetTicket: string;
     price: number;
     marketValue: number;
-    cost: number;
     averageCost: number;
+    cost: number;
     amountOfAssets: number;
     unrealisedProfit: number;
 }
 
-export type PortfolioValue = {
+export type Account = {
+    name: string; 
+    accountValue : AccountValue;
+}
+
+export type AccountValue = {
     date: string;
     value: number;
+    invested: number;
+}
+
+export type PortfolioHistory = {
+    accounts: Account[]
 }
 
 export enum ChartTimeFrame {
@@ -53,3 +41,5 @@ export enum ChartTimeFrame {
     year = '1y',
     max = 'max'
 }
+
+export type ChartCache = Partial<Record<ChartTimeFrame, PortfolioHistory>>;

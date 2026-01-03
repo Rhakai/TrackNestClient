@@ -3,12 +3,20 @@
 import { Chart } from './chart';
 import { Card, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChartTimeFrame } from '@/lib/trackNestTypes';
-import { useState } from 'react';
+import { ChartCache, ChartTimeFrame, PortfolioHistory } from '@/lib/trackNestTypes';
+import { useEffect, useState } from 'react';
+import { getPortfolioHistory } from '@/services/TrackNestApi';
+import { Spinner } from '@/components/spinner';
 
 export default function PortfolioChartComponent() {
 
     const [timeRange, setTimeRange] = useState<ChartTimeFrame>(ChartTimeFrame.week);
+
+    const [cache, setCache] = useState<ChartCache>({});
+
+    const [portfolioHistory, setPortfolioHistory] = useState<PortfolioHistory>({ accounts: [] });
+    const [isError, setIsError] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     const subtitleMap: Record<ChartTimeFrame, string> = {
         [ChartTimeFrame.day]: 'Evolution for Today',
@@ -18,6 +26,53 @@ export default function PortfolioChartComponent() {
         [ChartTimeFrame.year]: 'Evolution for One Year',
         [ChartTimeFrame.max]: 'Evolution Since Beginning',
     };
+
+    useEffect(() => {
+
+        const setSuccess = (portfilio: PortfolioHistory) => {
+            setIsError(false);
+            setIsLoading(false);
+            setPortfolioHistory(portfilio);
+        }
+
+        const resetFlags = () => {
+            setIsError(false);
+            setIsLoading(true);
+        }
+
+        const setError = () => {
+            setIsError(true);
+            setIsLoading(false);
+        }
+
+        const loadData = async () => {
+
+            const cachedResult = cache[timeRange];
+            if (cachedResult !== undefined && cachedResult !== null) {
+                setSuccess(cachedResult);
+                return;
+            }
+
+            resetFlags();
+
+            const data = await getPortfolioHistory(timeRange);
+
+            if (data === null) {
+                setError();
+                return;
+            }
+
+            setCache(prevCache => ({
+                ...prevCache,
+                [timeRange]: data
+            }));
+
+            setSuccess(data);
+        };
+
+        loadData();
+
+    }, [timeRange, cache]);
 
     return (
         <Card className="p-6 bg-card border">
@@ -30,8 +85,8 @@ export default function PortfolioChartComponent() {
                         {subtitleMap[timeRange]}
                     </p>
                 </div>
-                <Tabs 
-                    defaultValue={ChartTimeFrame.week} 
+                <Tabs
+                    defaultValue={ChartTimeFrame.week}
                     onValueChange={(value) => setTimeRange(value as ChartTimeFrame)}
                 >
                     <TabsList className="bg-muted">
@@ -44,7 +99,18 @@ export default function PortfolioChartComponent() {
                     </TabsList>
                 </Tabs>
             </div>
-            <Chart range={timeRange} />
+
+            {isLoading ? (
+                <div className="h-[350px] w-full flex items-center justify-center">
+                    <Spinner size={50} />
+                </div>
+            ) : isError ? (
+                <div className="h-[350px] w-full flex items-center justify-center text-destructive font-medium border border-dashed border-destructive/50 rounded-md bg-destructive/5">
+                    Problems on Loading Chart
+                </div>
+            ) : (
+                <Chart range={timeRange} portfolioHistory={portfolioHistory} />
+            )}
         </Card>
     )
 }

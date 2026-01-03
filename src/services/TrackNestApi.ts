@@ -1,4 +1,4 @@
-import { ChartDataPoint, ChartTimeFrame, DashboardSummary, Position } from '@/lib/trackNestTypes';
+import { ChartTimeFrame, PortfolioDetails, PortfolioHistory, Position } from '@/lib/trackNestTypes';
 
 
 // 2. CONFIGURATION
@@ -12,36 +12,49 @@ export async function getPositions(): Promise<Position[]> {
     return await response.json();
   } catch (error) {
     console.error(error);
-    return []; // Return empty array on error so the app doesn't crash
+    return [];
   }
 }
 
 /**
  * Fetches the historical data for the Area Chart
- * @param range - 'day', 'week', 'month', 'ytd', '1y', 'max'
+ * @param range - ChartTimeFrame
  */
-export async function getChartData(range: ChartTimeFrame): Promise<ChartDataPoint[]> {
+export async function getPortfolioHistory(range: ChartTimeFrame): Promise<PortfolioHistory | null> {
+  
+  //FOR TESTS
+  await sleep(2000);
+  if(range === ChartTimeFrame.max){
+    return { accounts: [] };
+  }
+  return null;
+  
+  
   try {
-    const response = await fetch(`${API_BASE_URL}/history?range=${range}`);
+    const response = await fetch(`${API_BASE_URL}/portfolio/history?range=${range}`);
     if (!response.ok) throw new Error('Failed to fetch chart data');
     return await response.json();
   } catch (error) {
     console.error(error);
-    // Return mock data fallback if API fails (optional, good for testing)
-    return []; 
+    return null;
   }
 }
 
 /**
  * Fetches the top-level numbers for the KPI Cards
  */
-export async function getDashboardSummary(): Promise<DashboardSummary> {
+export async function getDashboardSummary(): Promise<PortfolioDetails | null> {
   try {
     const response = await fetch(`${API_BASE_URL}/summary`);
     if (!response.ok) throw new Error('Failed to fetch summary');
     return await response.json();
   } catch (error) {
     console.error(error);
-    return { totalValue: '$0.00', totalGain: '0.00', gainPercentage: '0%' };
+    return null;
   }
+}
+
+
+async function sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
