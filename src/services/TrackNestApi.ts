@@ -23,6 +23,7 @@ export async function getPositions(): Promise<Position[]> {
 export async function getPortfolioHistory(range: ChartTimeFrame): Promise<PortfolioHistory | null> {
   
   //FOR TESTS
+  
   await sleep(2000);
   if(range === ChartTimeFrame.max){
     return { accounts: [] };

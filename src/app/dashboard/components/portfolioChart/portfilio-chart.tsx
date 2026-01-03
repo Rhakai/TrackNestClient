@@ -28,27 +28,30 @@ export default function PortfolioChartComponent() {
     };
 
     useEffect(() => {
+        // 1. Create a flag to track THIS specific request
+        let isActive = true;
 
-        const setSuccess = (portfilio: PortfolioHistory) => {
+        const setSuccess = (portfolio: PortfolioHistory) => {
+            if (!isActive) return;
             setIsError(false);
             setIsLoading(false);
-            setPortfolioHistory(portfilio);
-        }
+            setPortfolioHistory(portfolio);
+        };
 
         const resetFlags = () => {
             setIsError(false);
             setIsLoading(true);
-        }
+        };
 
         const setError = () => {
+            if (!isActive) return;
             setIsError(true);
             setIsLoading(false);
-        }
+        };
 
         const loadData = async () => {
-
             const cachedResult = cache[timeRange];
-            if (cachedResult !== undefined && cachedResult !== null) {
+            if (cachedResult) {
                 setSuccess(cachedResult);
                 return;
             }
@@ -57,20 +60,26 @@ export default function PortfolioChartComponent() {
 
             const data = await getPortfolioHistory(timeRange);
 
+            if (!isActive)
+                return;
+
             if (data === null) {
                 setError();
+                console.error("Failed to load chart data");
                 return;
             }
 
-            setCache(prevCache => ({
-                ...prevCache,
-                [timeRange]: data
-            }));
-
+            
+            setCache(prev => ({ ...prev, [timeRange]: data }));
             setSuccess(data);
         };
 
         loadData();
+
+        // CLEANUP: If user changes tab, mark this request as "dead"
+        return () => {
+            isActive = false;
+        };
 
     }, [timeRange, cache]);
 
