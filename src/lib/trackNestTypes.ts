@@ -18,19 +18,20 @@ export type Position = {
     unrealisedProfit: number;
 }
 
-export type Account = {
-    name: string; 
-    accountValue : AccountValue;
+export type PortfolioHistory = {
+    combined: ValuePoint[];
+    accounts: Account[];
 }
 
-export type AccountValue = {
+export type Account = {
+    name: string; 
+    valuePoints : ValuePoint[];
+}
+
+export type ValuePoint = {
     date: string;
     value: number;
     invested: number;
-}
-
-export type PortfolioHistory = {
-    accounts: Account[]
 }
 
 export enum ChartTimeFrame {

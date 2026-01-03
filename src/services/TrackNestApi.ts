@@ -1,4 +1,5 @@
 import { ChartTimeFrame, PortfolioDetails, PortfolioHistory, Position } from '@/lib/trackNestTypes';
+import { MOCK_PORTFOLIOS } from './MockData';
 
 
 // 2. CONFIGURATION
@@ -22,14 +23,11 @@ export async function getPositions(): Promise<Position[]> {
  */
 export async function getPortfolioHistory(range: ChartTimeFrame): Promise<PortfolioHistory | null> {
   
-  //FOR TESTS
-  
-  await sleep(2000);
-  if(range === ChartTimeFrame.max){
-    return { accounts: [] };
-  }
-  return null;
-  
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(MOCK_PORTFOLIOS[range]);
+    }, 800); // 800ms simulated network latency
+  });
   
   try {
     const response = await fetch(`${API_BASE_URL}/portfolio/history?range=${range}`);

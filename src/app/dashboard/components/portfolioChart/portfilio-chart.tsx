@@ -3,8 +3,15 @@
 import { Chart } from './chart';
 import { Card, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { ChartCache, ChartTimeFrame, PortfolioHistory } from '@/lib/trackNestTypes';
-import { useEffect, useState } from 'react';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select";
+import { ChartCache, ChartTimeFrame, PortfolioHistory, ValuePoint } from '@/lib/trackNestTypes';
+import { useEffect, useState, useMemo } from 'react';
 import { getPortfolioHistory } from '@/services/TrackNestApi';
 import { Spinner } from '@/components/spinner';
 
@@ -12,9 +19,10 @@ export default function PortfolioChartComponent() {
 
     const [timeRange, setTimeRange] = useState<ChartTimeFrame>(ChartTimeFrame.week);
 
-    const [cache, setCache] = useState<ChartCache>({});
+    const [selectedAccount, setSelectedAccount] = useState<string>("all");
 
-    const [portfolioHistory, setPortfolioHistory] = useState<PortfolioHistory>({ accounts: [] });
+    const [cache, setCache] = useState<ChartCache>({});
+    const [portfolioHistory, setPortfolioHistory] = useState<PortfolioHistory>();
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -28,7 +36,6 @@ export default function PortfolioChartComponent() {
     };
 
     useEffect(() => {
-        // 1. Create a flag to track THIS specific request
         let isActive = true;
 
         const setSuccess = (portfolio: PortfolioHistory) => {
@@ -57,43 +64,66 @@ export default function PortfolioChartComponent() {
             }
 
             resetFlags();
-
             const data = await getPortfolioHistory(timeRange);
 
-            if (!isActive)
-                return;
+            if (!isActive) return;
 
             if (data === null) {
                 setError();
-                console.error("Failed to load chart data");
+                // console.error("Failed to load chart data");
                 return;
             }
 
-            
             setCache(prev => ({ ...prev, [timeRange]: data }));
             setSuccess(data);
         };
 
         loadData();
 
-        // CLEANUP: If user changes tab, mark this request as "dead"
-        return () => {
-            isActive = false;
-        };
-
+        return () => { isActive = false; };
     }, [timeRange, cache]);
+
+    const activeChartData: ValuePoint[] = useMemo(() => {
+        if (!portfolioHistory) return [];
+
+        if (selectedAccount === "all") {
+            return portfolioHistory.combined;
+        }
+
+        const account = portfolioHistory.accounts.find(acc => acc.name === selectedAccount);
+        return account ? account.valuePoints : [];
+    }, [selectedAccount, portfolioHistory]);
 
     return (
         <Card className="p-6 bg-card border">
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <CardTitle className="text-lg font-semibold text-foreground">
-                        Total Visitors
-                    </CardTitle>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
+                <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                        <CardTitle className="text-lg font-semibold text-foreground">
+                            Portfolio Performance
+                        </CardTitle>
+
+                        {/* The Account Selector */}
+                        <Select value={selectedAccount} onValueChange={setSelectedAccount}>
+                            <SelectTrigger className="h-8 w-[180px] bg-muted/50 border-none focus:ring-0">
+                                <SelectValue placeholder="Select View" />
+                            </SelectTrigger>
+                            <SelectContent position="popper" side="right" align="start" >
+                                <SelectItem value="all">All</SelectItem>
+                                {portfolioHistory?.accounts.map((acc) => (
+                                    <SelectItem key={acc.name} value={acc.name}>
+                                        {acc.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
                     <p className="text-sm text-muted-foreground">
                         {subtitleMap[timeRange]}
                     </p>
                 </div>
+
                 <Tabs
                     defaultValue={ChartTimeFrame.week}
                     onValueChange={(value) => setTimeRange(value as ChartTimeFrame)}
@@ -109,16 +139,18 @@ export default function PortfolioChartComponent() {
                 </Tabs>
             </div>
 
+            {/* CHART AREA */}
             {isLoading ? (
                 <div className="h-[350px] w-full flex items-center justify-center">
                     <Spinner size={50} />
                 </div>
-            ) : isError ? (
+            ) : isError || !portfolioHistory ? (
                 <div className="h-[350px] w-full flex items-center justify-center text-destructive font-medium border border-dashed border-destructive/50 rounded-md bg-destructive/5">
                     Problems on Loading Chart
                 </div>
             ) : (
-                <Chart range={timeRange} portfolioHistory={portfolioHistory} />
+                // Pass the FILTERED data (activeChartData) instead of the whole history
+                <Chart valuePoints={activeChartData} range={timeRange} />
             )}
         </Card>
     )
