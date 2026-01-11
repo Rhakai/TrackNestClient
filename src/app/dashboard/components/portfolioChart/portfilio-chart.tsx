@@ -14,6 +14,7 @@ import { ChartCache, ChartTimeFrame, PortfolioHistory, ValuePoint } from '@/lib/
 import { useEffect, useState, useMemo } from 'react';
 import { getPortfolioHistory } from '@/services/TrackNestApi';
 import { Spinner } from '@/components/spinner';
+import SectionTitle from '@/components/section-title';
 
 export default function PortfolioChartComponent() {
 
@@ -99,9 +100,7 @@ export default function PortfolioChartComponent() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 gap-4">
                 <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                        <CardTitle className="text-lg font-semibold text-foreground">
-                            Portfolio Performance
-                        </CardTitle>
+                        <SectionTitle title="Portfolio Performance" />
 
                         {/* The Account Selector */}
                         <Select value={selectedAccount} onValueChange={setSelectedAccount}>

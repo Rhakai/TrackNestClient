@@ -26,6 +26,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Settings2, ChevronLeft, ChevronRight } from 'lucide-react'
+import SectionTitle from '@/components/section-title'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -53,7 +54,7 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {/* TOOLBAR */}
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-foreground">Your Positions</h3>
+        <SectionTitle title="Your Positions" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex bg-card border hover:bg-accent hover:text-accent-foreground">
