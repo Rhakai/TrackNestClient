@@ -36,7 +36,6 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
 
   const table = useReactTable({
@@ -44,10 +43,8 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onRowSelectionChange: setRowSelection,
     onColumnVisibilityChange: setColumnVisibility,
     state: {
-      rowSelection,
       columnVisibility,
     },
   })
@@ -56,17 +53,14 @@ export function DataTable<TData, TValue>({
     <div className="space-y-4">
       {/* TOOLBAR */}
       <div className="flex items-center justify-between">
-        {/* OPTIMIZED: text-foreground ensures white text in dark mode */}
         <h3 className="text-lg font-semibold text-foreground">Your Positions</h3>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            {/* OPTIMIZED: Uses bg-card and standard border. hover:bg-accent handles interaction. */}
             <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex bg-card border hover:bg-accent hover:text-accent-foreground">
               <Settings2 className="mr-2 h-4 w-4" />
               Customize Columns
             </Button>
           </DropdownMenuTrigger>
-          {/* OPTIMIZED: bg-popover matches the theme's dropdown style */}
           <DropdownMenuContent align="end" className="w-[150px] bg-popover border text-popover-foreground">
             {table
               .getAllColumns()
@@ -88,17 +82,14 @@ export function DataTable<TData, TValue>({
       </div>
 
       {/* TABLE CONTAINER */}
-      {/* OPTIMIZED: bg-card provides the dark background, border creates the shape */}
       <div className="rounded-md border bg-card">
         <Table>
-          {/* OPTIMIZED: bg-muted/50 gives a subtle contrast to the header without being too light */}
           <TableHeader className="bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="border-b hover:bg-transparent">
-                {headerGroup.headers.map((header) => {
+                {headerGroup.headers.map((header, index) => {
                   return (
-                    // OPTIMIZED: text-muted-foreground is the standard for secondary text/labels
-                    <TableHead key={header.id} className="text-muted-foreground">
+                    <TableHead key={header.id} className={`text-muted-foreground ${index === 0 ? 'pl-4' : ''}`}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(header.column.columnDef.header, header.getContext())}
@@ -113,13 +104,10 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  // OPTIMIZED: These interactions are critical for the shadcn feel
-                  className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
+                  className="border-b transition-colors hover:bg-muted/50"
                 >
-                  {row.getVisibleCells().map((cell) => (
-                    // OPTIMIZED: text-foreground ensures data is bright and readable
-                    <TableCell key={cell.id} className="text-foreground">
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell key={cell.id} className={`text-foreground ${index === 0 ? 'pl-4' : ''}`}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -139,8 +127,7 @@ export function DataTable<TData, TValue>({
       {/* FOOTER / PAGINATION */}
       <div className="flex items-center justify-between px-2">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} row(s) total.
         </div>
         <div className="flex items-center space-x-6 lg:space-x-8">
           <div className="flex items-center space-x-2">

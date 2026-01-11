@@ -1,4 +1,4 @@
-import { ChartTimeFrame, PortfolioHistory, ValuePoint, Account } from "@/lib/trackNestTypes";
+import { ChartTimeFrame, PortfolioHistory, ValuePoint, Account, Position } from "@/lib/trackNestTypes";
 
 // --- 1. CONFIGURATION ---
 // Increased volatility significantly:
@@ -132,3 +132,43 @@ export const MOCK_PORTFOLIOS: Record<ChartTimeFrame, PortfolioHistory> = {
   [ChartTimeFrame.year]: getHistoryForTimeframe(ChartTimeFrame.year),
   [ChartTimeFrame.max]: getHistoryForTimeframe(ChartTimeFrame.max),
 };
+
+// --- 6. MOCK POSITIONS ---
+export const MOCK_POSITIONS: Position[] = [
+  { 
+    accountName: 'IBKR (Stocks)', 
+    assetType: 'Stock', 
+    assetCategory: 'Equity', 
+    assetTicket: 'AAPL', 
+    price: 185.20, 
+    marketValue: 1852.00, 
+    averageCost: 150.00, 
+    cost: 1500.00, 
+    amountOfAssets: 10, 
+    unrealisedProfit: 352.00 
+  },
+  { 
+    accountName: 'IBKR (Stocks)', 
+    assetType: 'Stock', 
+    assetCategory: 'Equity', 
+    assetTicket: 'TSLA', 
+    price: 175.50, 
+    marketValue: 877.50, 
+    averageCost: 240.00, 
+    cost: 1200.00, 
+    amountOfAssets: 5, 
+    unrealisedProfit: -322.50 
+  },
+  { 
+    accountName: 'Binance (Crypto)', 
+    assetType: 'Crypto', 
+    assetCategory: 'Cryptocurrency', 
+    assetTicket: 'BTC', 
+    price: 64200, 
+    marketValue: 32100, 
+    averageCost: 32000, 
+    cost: 16000, 
+    amountOfAssets: 0.5, 
+    unrealisedProfit: 16100 
+  },
+];

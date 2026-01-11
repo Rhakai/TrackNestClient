@@ -1,81 +1,78 @@
 'use client'
 
-import { ColumnDef } from '@tanstack/react-table'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Badge } from '@/components/ui/badge'
+import { ColumnDef, CellContext } from '@tanstack/react-table'
+import { Position } from '@/lib/trackNestTypes'
+import { formatCurrency } from '@/lib/utils'
 
-// This type matches your data
-export type Position = {
-  ticker: string
-  shares: number
-  avgPrice: string
-  currentPrice: string
-  gain: string
-  status: 'Profit' | 'Loss'
-}
+// Helper functions for common cell renderers
+const currencyCell = (accessorKey: keyof Position) => ({
+  cell: ({ row }: CellContext<Position, unknown>) => {
+    return formatCurrency(row.getValue(accessorKey) as number)
+  },
+})
+
+const numberCell = (
+  accessorKey: keyof Position,
+  options: Intl.NumberFormatOptions = { maximumFractionDigits: 4 }
+) => ({
+  cell: ({ row }: CellContext<Position, unknown>) => {
+    const value = row.getValue(accessorKey) as number
+    return value.toLocaleString('en-US', options)
+  },
+})
 
 export const columns: ColumnDef<Position>[] = [
-  // 1. The 'Select' Column
+  // Data Columns
   {
-    id: 'select',
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label='Select all'
-        // The Checkbox component automatically uses your 'primary' and 'border' variables
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label='Select row'
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  // 2. Data Columns
-  {
-    accessorKey: 'ticker',
+    accessorKey: 'assetTicket',
     header: 'Ticker',
-    // OPTIMIZED: Replaced 'text-white' with 'text-foreground' (Semantic)
-    cell: ({ row }) => <div className='font-medium text-foreground'>{row.getValue('ticker')}</div>,
+    cell: ({ row }) => <div className='font-medium text-foreground'>{row.getValue('assetTicket')}</div>,
   },
   {
-    accessorKey: 'shares',
-    header: 'Shares',
+    accessorKey: 'amountOfAssets',
+    header: 'Number of Assets',
+    ...numberCell('amountOfAssets', { maximumFractionDigits: 4 }),
   },
   {
-    accessorKey: 'avgPrice',
-    header: 'Avg. Price',
+    accessorKey: 'marketValue',
+    header: 'Market Value',
+    ...currencyCell('marketValue'),
   },
   {
-    accessorKey: 'currentPrice',
-    header: 'Current Price',
+    accessorKey: 'price',
+    header: 'Price',
+    ...currencyCell('price'),
   },
   {
-    accessorKey: 'gain',
-    header: 'Total Gain',
+    accessorKey: 'cost',
+    header: 'Invested Value',
+    ...currencyCell('cost'),
+  },
+  {
+    accessorKey: 'averageCost',
+    header: 'Average Cost',
+    ...currencyCell('averageCost'),
+  },
+  {
+    accessorKey: 'unrealisedProfit',
+    header: 'Profit/Loss',
     cell: ({ row }) => {
-      const gain = row.getValue('gain') as string
-      // Standard financial colors (green/red) are usually kept as utility classes 
-      // rather than semantic variables because they mean 'Good/Bad' regardless of theme.
+      const profit = row.getValue('unrealisedProfit') as number
+      const cost = row.original.cost
+      const percentage = cost !== 0 ? (profit / cost) * 100 : 0
+      const isProfit = profit >= 0
+      const sign = isProfit ? '+' : ''
+      
       return (
-        <span className={gain.startsWith('+') ? 'text-green-500' : 'text-red-500'}>
-          {gain}
-        </span>
+        <div className='flex flex-col'>
+          <span className={isProfit ? 'text-green-500' : 'text-red-500'}>
+            {sign}{formatCurrency(profit)}
+          </span>
+          <span className={`text-xs ${isProfit ? 'text-green-500' : 'text-red-500'}`}>
+            {sign}{percentage.toFixed(2)}%
+          </span>
+        </div>
       )
     },
-  },
-  {
-    accessorKey: 'status',
-    header: 'Status',
-    cell: ({ row }) => (
-      <Badge variant={row.getValue('status') === 'Profit' ? 'default' : 'destructive'}>
-        {row.getValue('status')}
-      </Badge>
-    ),
   },
 ]
